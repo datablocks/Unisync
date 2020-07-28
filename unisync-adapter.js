@@ -1,5 +1,6 @@
-function UnisyncAdapter(syncReceivedHandler) {
+function UnisyncAdapter(partnerId, syncReceivedHandler) {
     this.syncReceivedHandler = syncReceivedHandler;
+    this.partnerId = partnerId;
     window.addEventListener('message', function (event) {
         if (event.data.sentinel && event.data.sentinel === 'dblks_syncData') {
             this.onSyncReceived(event.data);
@@ -18,7 +19,7 @@ UnisyncAdapter.prototype.onSyncReceived = function(syncData) {
  */
 UnisyncAdapter.prototype.createIframe = function() {
     var iframe = document.createElement('iframe');
-    iframe.src = 'https://s.0cf.io';
+    iframe.src = `https://s.0cf.io/?pid=${this.partnerId}`;
     iframe.id = 'unisync-iframe';
     iframe.style= 'display: none;';
 
@@ -32,5 +33,6 @@ function receiveSync(id, uid) {
     console.log(uid) // unique id
 }
 
-const unisyncAdapter = new UnisyncAdapter(receiveSync);
+const unisyncParnerId = 'YOUR PARTNER ID FROM DATABLOCKS';
+const unisyncAdapter = new UnisyncAdapter(unisyncParnerId, receiveSync);
 unisyncAdapter.createIframe();
