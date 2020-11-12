@@ -1,9 +1,10 @@
 function UnisyncAdapter(partnerId, syncReceivedHandler) {
+    var self = this;
     this.syncReceivedHandler = syncReceivedHandler;
     this.partnerId = partnerId;
     window.addEventListener('message', function (event) {
         if (event.data.sentinel && event.data.sentinel === 'dblks_syncData') {
-            this.onSyncReceived(event.data);
+            self.onSyncReceived(event.data.data);
         }
     })
 }
@@ -29,10 +30,10 @@ UnisyncAdapter.prototype.createIframe = function() {
 
 // usage:
 function receiveSync(id, uid) {
-    console.log(id) // buyer name
-    console.log(uid) // unique id
+    console.log('UNISYNC: buyer name: ' + id) // buyer name
+    console.log('UNISYNC: buyer id: ' + uid) // unique id
 }
 
-const unisyncParnerId = 'YOUR PARTNER ID FROM DATABLOCKS';
-const unisyncAdapter = new UnisyncAdapter(unisyncParnerId, receiveSync);
+var unisyncParnerId = 'YOUR PARTNER ID FROM DATABLOCKS';
+var unisyncAdapter = new UnisyncAdapter(unisyncParnerId, receiveSync);
 unisyncAdapter.createIframe();
